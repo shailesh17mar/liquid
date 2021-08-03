@@ -1,0 +1,47 @@
+{
+  "name": "Liquid",
+  "description": "Fluid Collaboration!",
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAscH1EGMIR7ZrGs2JC5k7Lp59q5kLcYBQk8IIUrEn9qWFQeLdE7fJAHuLpkIpG0KcSYwfCDwbvT1pB6cge4L3qKUXJVMyddewI9h2bVhgzNnBky1meHFEFwLj0Bw8uEiDwVNnjpgKQMUxIr2CTDtZglgxJ4gGZXJ3NDPROw0I+H9lF+TGYXONLJ8UEcxA64H5R/Uw4BbdCznOho69GRjcvw0MJXz5v6Ozqx1zuCoQxJH2dPK85Ce0a9w4vrjE5io9HociCDYlECKjju+epNpE4UutmhgxvYMqxq7zXCs/uAjvTtsK7xpXm9Wt5lcyd1PSdHLagS+WtGog1qyRZT1HqQIDAQAB",
+  "browser_action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["./background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["index.css", "rrweb-all.min.css"],
+      "js": ["liquid.js"]
+    }
+  ],
+  "web_accessible_resources": ["liquid.js", "collabMode.js", "init.js"],
+  "oauth2": {
+    "client_id": "1077167489512-so5ln69eqbbjqpckatnmt9hf8kbues2b.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/userinfo.email", "profile"]
+  },
+  "permissions": [
+    "identity",
+    "contextMenus",
+    "storage",
+    "identity.email",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "webNavigation",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ]
+}

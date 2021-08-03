@@ -1,0 +1,401 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: ".SFNSText-Regular", "BlinkMacSystemFont", "Helvetica Neue",
+    "Segoe UI", "Arial", sans-serif;
+}
+/* TODO figure out why the default focus color in Electron is orange */
+*:focus {
+  outline-color: rgb(0, 117, 255);
+}
+.dark-mode *:focus {
+  outline-color: transparent;
+}
+body.mac * {
+  letter-spacing: 0.4px;
+}
+[hidden] {
+  display: none !important;
+}
+
+/* buttons are styled like normal text by default */
+button {
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: inherit;
+  outline: none;
+}
+body,
+html {
+  background-color: #fff;
+  color: #000;
+  height: 100%;
+  overflow: hidden;
+  overflow-x: auto;
+  -webkit-user-select: none;
+}
+
+body.dark-mode {
+  background-color: rgb(33, 37, 43);
+  color: lightgrey;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 5em;
+  font-weight: 300;
+  opacity: 0.8;
+  margin: 0.5em 0;
+  color: inherit;
+  text-align: center;
+}
+h2 {
+  text-align: left;
+  font-size: 2.75em;
+}
+h3 {
+  text-align: left;
+  font-size: 2em;
+}
+h1 + h2 {
+  margin-top: -1em;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.spacer {
+  height: 1em;
+}
+
+.light-fade {
+  opacity: 0.666;
+}
+
+a {
+  color: royalblue;
+  text-decoration: none;
+}
+
+.dark-mode a {
+  color: dodgerblue;
+}
+
+.dark-mode input,
+.dark-mode textarea {
+  background-color: rgb(52, 58, 68);
+  color: white;
+  border-color: transparent;
+}
+
+/* styled scrollbars */
+
+.has-thin-scrollbar::-webkit-scrollbar {
+  height: 0.25em;
+}
+.has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.175);
+  border-radius: 0.25em;
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+#webviews-inner > div {
+  border: 3px solid #f1f1f1;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.frame-row {
+  padding: 10px;
+  background: #f1f1f1;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+/* Create three unequal columns that floats next to each other */
+.frame-column {
+  float: left;
+}
+
+.frame-left {
+  width: 15%;
+}
+
+.frame-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.frame-dot {
+  margin-top: 4px;
+  margin-right: 8px;
+  height: 12px;
+  width: 12px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.webview-container {
+  padding: 10px;
+}
+
+#LIQUID-ROOT {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+/* code { */
+/*   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', */
+/*     monospace; */
+/* } */
+
+.liquid-bar {
+  position: fixed;
+  bottom: 10px;
+  left: 20px;
+  min-width: 200px;
+  display: flex;
+}
+
+.liquid-realtime .liquid-bar {
+  left: calc(50% + 95px);
+}
+
+.liquid-bar.open .liquid-action-button {
+  border-left: 0;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-left: solid 1px gray;
+  /* transition: border-left 200ms; */
+  /* transition: border-start-start-radius 200ms; */
+  /* transition: border-end-start-radius 200ms; */
+}
+
+.liquid-avatar {
+  width: 48px;
+  display: flex;
+  height: 48px;
+  border-radius: 50%;
+  border: solid 2px rgb(47, 128, 237);
+  margin: 0 4px;
+}
+
+.liquid-action-array {
+  overflow: hidden;
+  transition: width 200ms;
+}
+
+.liquid-action-array.open {
+  /* width: auto; */
+}
+
+.liquid-action-array ul {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  border: solid 2px rgb(47, 128, 237);
+  margin-right: 0;
+  border-right: 0;
+  border-start-start-radius: 24px;
+  border-end-start-radius: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.liquid-control {
+  width: 24px;
+  height: 24px;
+  margin: 0 12px;
+  cursor: pointer;
+}
+
+.liquid-control svg path {
+  stroke: #828282;
+}
+.liquid-control.selected svg path {
+  stroke: rgb(47, 128, 237);
+  /* border-radius: 50%; */
+}
+
+.liquid-control .liquid-user-counter {
+  padding: 0px 12px;
+  width: 42px;
+  height: 32px;
+  background: #ffffff;
+  border: 2px solid #074ee8;
+  color: #074ee8;
+  box-sizing: border-box;
+  border-radius: 100px;
+  /* align-self: center; */
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin-top: 2px;
+  margin-left: 4px;
+}
+
+.cursor {
+  /* width: 0; */
+  /* height: 0; */
+  /* border-radius: 50%; */
+  position: absolute;
+  transform: translate3d(-50%, -50%, 0);
+  transition: transform 0.2s cubic-bezier(0.02, 1.23, 0.79, 1.08);
+}
+
+.liquid-bar .navigate.icon {
+  color: #27ae60;
+  position: absolute;
+  margin-left: 6px;
+  margin-top: -1px;
+  width: 14px;
+  height: 18px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.liquid-action-button {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #2f80ed;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  background: #ffffff;
+}
+
+.navigate.icon:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -17px;
+  width: 0;
+  height: 0;
+  border-top: solid 18px transparent;
+  border-bottom: solid 18px currentColor;
+  border-left: solid 7px transparent;
+  border-right: solid 7px transparent;
+}
+
+.navigate.icon:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 0;
+  height: 0;
+  color: white;
+  border-top: solid 5px transparent;
+  border-bottom: solid 5px currentColor;
+  border-left: solid 7px transparent;
+  border-right: solid 7px transparent;
+}
+
+.liquid-bar .code.icon {
+  color: #000;
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -8px;
+}
+
+.liquid-bar .code.icon:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-left: solid 1px currentColor;
+  border-top: solid 1px currentColor;
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+.liquid-bar .code.icon:after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-bottom: solid 1px currentColor;
+  border-right: solid 1px currentColor;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.liquid-bar button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.liquid-dropdown {
+  background: #ffffff;
+  position: fixed;
+  left: 40px;
+  bottom: 80px;
+  transition: all 0.25s ease-out;
+  transform: scale(0);
+  /* transform-origin: 100% 0; */
+  transform-origin: bottom left;
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 10%), 0 3px 16px rgb(0 0 0 / 8%),
+    0 2px 6px 1px rgb(0 0 0 / 9%);
+}
+
+.liquid-dropdown li {
+  display: block;
+  width: 100%;
+}
+
+.liquid-dropdown li a {
+  width: 100%;
+  padding: 1em 18px;
+  display: inline-block;
+  white-space: pre;
+  box-sizing: border-box;
+}
+
+.liquid-dropdown li a:hover {
+  background: rgba(47, 128, 237, 0.3);
+}
+.liquid-dropdown li a span {
+  display: none;
+}
+.liquid-dropdown li a:hover span {
+  display: inline;
+}
+
+.liquid-dropdown.active {
+  transform: scale(1);
+  transition: all 0.25s cubic-bezier(0.5, 1.8, 0.9, 0.8);
+}
+
+#player {
+  position: absolute;
+  top: 1000px;
+  width: 10px;
+  height: 10px;
+  background: red;
+  left: 40;
+}

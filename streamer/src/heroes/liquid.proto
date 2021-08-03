@@ -1,0 +1,572 @@
+// hero/hero.proto
+syntax = "proto3";
+
+package liquid;
+
+service HeroesService {
+  rpc FindOne (HeroById) returns (Hero) {}
+}
+
+// import {
+//   serializedNodeWithId,
+//   idNodeMap,
+//   INode,
+//   MaskInputOptions,
+//   SlimDOMOptions,
+//   MaskInputFn,
+//   MaskTextFn,
+// } from 'rrweb-snapshot';
+// import { PackFn, UnpackFn } from './packer/base';
+// import { FontFaceDescriptors } from 'css-font-loading-module';
+// import { IframeManager } from './record/iframe-manager';
+// import { ShadowDomManager } from './record/shadow-dom-manager';
+// import message { Replayer } from './replay';
+
+enum EventType {
+  DomContentLoaded =0;
+  Load=1;
+  FullSnapshot=2;
+  IncrementalSnapshot=3;
+  Meta=4;
+  Custom=5;
+  Plugin=6;
+}
+
+message domContentLoadedEvent {
+  EventType type= EventType.DomContentLoaded;
+  data: {};
+};
+
+ message loadedEvent {
+  EventType type= EventType.Load;
+  data: {};
+};
+
+ message fullSnapshotEvent {
+  EventType type= EventType.FullSnapshot;
+  data: {
+    node: serializedNodeWithId;
+    initialOffset: {
+      top: number;
+      left: number;
+    };
+  };
+};
+
+ message incrementalSnapshotEvent {
+  type: EventType.IncrementalSnapshot;
+  data: incrementalData;
+};
+
+ message metaEvent {
+  type: EventType.Meta;
+  data: {
+    href: string;
+    width: number;
+    height: number;
+  };
+};
+
+ message customEvent<T = unknown> {
+  type: EventType.Custom;
+  data: {
+    tag: string;
+    payload: T;
+  };
+};
+
+ message pluginEvent<T = unknown> {
+  type: EventType.Plugin;
+  data: {
+    plugin: string;
+    payload: T;
+  };
+};
+
+ message styleSheetEvent {};
+
+ enum IncrementalSource {
+  Mutation,
+  MouseMove,
+  MouseInteraction,
+  Scroll,
+  ViewportResize,
+  Input,
+  TouchMove,
+  MediaInteraction,
+  StyleSheetRule,
+  CanvasMutation,
+  Font,
+  Log,
+  Drag,
+}
+
+ message mutationData {
+  source: IncrementalSource.Mutation;
+} & mutationCallbackParam;
+
+ message mousemoveData {
+  source:
+    | IncrementalSource.MouseMove
+    | IncrementalSource.TouchMove
+    | IncrementalSource.Drag;
+  positions: mousePosition[];
+};
+
+ message mouseInteractionData {
+  source: IncrementalSource.MouseInteraction;
+} & mouseInteractionParam;
+
+ message scrollData {
+  source: IncrementalSource.Scroll;
+} & scrollPosition;
+
+ message viewportResizeData {
+  source: IncrementalSource.ViewportResize;
+} & viewportResizeDimension;
+
+ message inputData {
+  source: IncrementalSource.Input;
+  id: number;
+} & inputValue;
+
+ message mediaInteractionData {
+  source: IncrementalSource.MediaInteraction;
+} & mediaInteractionParam;
+
+ message styleSheetRuleData {
+  source: IncrementalSource.StyleSheetRule;
+} & styleSheetRuleParam;
+
+ message canvasMutationData {
+  source: IncrementalSource.CanvasMutation;
+} & canvasMutationParam;
+
+ message fontData {
+  source: IncrementalSource.Font;
+} & fontParam;
+
+ message incrementalData =
+  | mutationData
+  | mousemoveData
+  | mouseInteractionData
+  | scrollData
+  | viewportResizeData
+  | inputData
+  | mediaInteractionData
+  | styleSheetRuleData
+  | canvasMutationData
+  | fontData;
+
+ message event =
+  | domContentLoadedEvent
+  | loadedEvent
+  | fullSnapshotEvent
+  | incrementalSnapshotEvent
+  | metaEvent
+  | customEvent
+  | pluginEvent;
+
+ message eventWithTime = event & {
+  timestamp: number;
+  delay?: number;
+};
+
+ message blockClass = string | RegExp;
+
+ message maskTextClass = string | RegExp;
+
+ message SamplingStrategy = Partial<{
+  /**
+   * false means not to record mouse/touch move events
+   * number is the throttle threshold of recording mouse/touch move
+   */
+  mousemove: boolean | number;
+  /**
+   * number is the throttle threshold of mouse/touch move callback
+   */
+  mousemoveCallback: number;
+  /**
+   * false means not to record mouse interaction events
+   * can also specify record some kinds of mouse interactions
+   */
+  mouseInteraction: boolean | Record<string, boolean | undefined>;
+  /**
+   * number is the throttle threshold of recording scroll
+   */
+  scroll: number;
+  /**
+   * 'all' will record all the input events
+   * 'last' will only record the last input value while input a sequence of chars
+   */
+  input: 'all' | 'last';
+}>;
+
+ message RecordPlugin<TOptions = unknown> {
+  name: string;
+  observer: (cb: Function, options: TOptions) => listenerHandler;
+  options: TOptions;
+};
+
+ message recordOptions<T> {
+  emit?: (e: T, isCheckout?: boolean) => void;
+  checkoutEveryNth?: number;
+  checkoutEveryNms?: number;
+  blockClass?: blockClass;
+  blockSelector?: string;
+  ignoreClass?: string;
+  maskTextClass?: maskTextClass;
+  maskTextSelector?: string;
+  maskAllInputs?: boolean;
+  maskInputOptions?: MaskInputOptions;
+  maskInputFn?: MaskInputFn;
+  maskTextFn?: MaskTextFn;
+  slimDOMOptions?: SlimDOMOptions | 'all' | true;
+  inlineStylesheet?: boolean;
+  hooks?: hooksParam;
+  packFn?: PackFn;
+  sampling?: SamplingStrategy;
+  recordCanvas?: boolean;
+  collectFonts?: boolean;
+  plugins?: RecordPlugin[];
+  // departed, please use sampling options
+  mousemoveWait?: number;
+  keepIframeSrcFn?: KeepIframeSrcFn;
+};
+
+ message observerParam {
+  mutationCb: mutationCallBack;
+  mousemoveCb: mousemoveCallBack;
+  mouseInteractionCb: mouseInteractionCallBack;
+  scrollCb: scrollCallback;
+  viewportResizeCb: viewportResizeCallback;
+  inputCb: inputCallback;
+  mediaInteractionCb: mediaInteractionCallback;
+  blockClass: blockClass;
+  blockSelector: string | null;
+  ignoreClass: string;
+  maskTextClass: maskTextClass;
+  maskTextSelector: string | null;
+  maskInputOptions: MaskInputOptions;
+  maskInputFn?: MaskInputFn;
+  maskTextFn?: MaskTextFn;
+  inlineStylesheet: boolean;
+  styleSheetRuleCb: styleSheetRuleCallback;
+  canvasMutationCb: canvasMutationCallback;
+  fontCb: fontCallback;
+  sampling: SamplingStrategy;
+  recordCanvas: boolean;
+  collectFonts: boolean;
+  slimDOMOptions: SlimDOMOptions;
+  doc: Document;
+  mirror: Mirror;
+  iframeManager: IframeManager;
+  shadowDomManager: ShadowDomManager;
+  plugins: Array<{
+    observer: Function;
+    callback: Function;
+    options: unknown;
+  }>;
+};
+
+ message hooksParam {
+  mutation?: mutationCallBack;
+  mousemove?: mousemoveCallBack;
+  mouseInteraction?: mouseInteractionCallBack;
+  scroll?: scrollCallback;
+  viewportResize?: viewportResizeCallback;
+  input?: inputCallback;
+  mediaInteaction?: mediaInteractionCallback;
+  styleSheetRule?: styleSheetRuleCallback;
+  canvasMutation?: canvasMutationCallback;
+  font?: fontCallback;
+};
+
+// https://dom.spec.whatwg.org/#interface-mutationrecord
+ message mutationRecord {
+  type: string;
+  target: Node;
+  oldValue: string | null;
+  addedNodes: NodeList;
+  removedNodes: NodeList;
+  attributeName: string | null;
+};
+
+ message textCursor {
+  node: Node;
+  value: string | null;
+};
+ message textMutation {
+  id: number;
+  value: string | null;
+};
+
+ message attributeCursor {
+  node: Node;
+  attributes: {
+    [key: string]: string | null;
+  };
+};
+ message attributeMutation {
+  id: number;
+  attributes: {
+    [key: string]: string | null;
+  };
+};
+
+ message removedNodeMutation {
+  parentId: number;
+  id: number;
+  isShadow?: boolean;
+};
+
+ message addedNodeMutation {
+  parentId: number;
+  // Newly recorded mutations will not have previousId any more, just for compatibility
+  previousId?: number | null;
+  nextId: number | null;
+  node: serializedNodeWithId;
+};
+
+ message mutationCallbackParam {
+  texts: textMutation[];
+  attributes: attributeMutation[];
+  removes: removedNodeMutation[];
+  adds: addedNodeMutation[];
+  isAttachIframe?: true;
+};
+
+ message mutationCallBack = (m: mutationCallbackParam) => void;
+
+ message mousemoveCallBack = (
+  p: mousePosition[],
+  source:
+    | IncrementalSource.MouseMove
+    | IncrementalSource.TouchMove
+    | IncrementalSource.Drag,
+) => void;
+
+ message mousePosition {
+  x: number;
+  y: number;
+  id: number;
+  timeOffset: number;
+};
+
+ enum MouseInteractions {
+  MouseUp,
+  MouseDown,
+  Click,
+  ContextMenu,
+  DblClick,
+  Focus,
+  Blur,
+  TouchStart,
+  TouchMove_Departed, // we will start a separate observer for touch move event
+  TouchEnd,
+}
+
+message mouseInteractionParam {
+  type: MouseInteractions;
+  id: number;
+  x: number;
+  y: number;
+};
+
+ message mouseInteractionCallBack = (d: mouseInteractionParam) => void;
+
+ message scrollPosition {
+  id: number;
+  x: number;
+  y: number;
+};
+
+ message scrollCallback = (p: scrollPosition) => void;
+
+ message styleSheetAddRule {
+  rule: string;
+  index?: number;
+};
+
+ message styleSheetDeleteRule {
+  index: number;
+};
+
+ message styleSheetRuleParam {
+  id: number;
+  removes?: styleSheetDeleteRule[];
+  adds?: styleSheetAddRule[];
+};
+
+ message styleSheetRuleCallback = (s: styleSheetRuleParam) => void;
+
+ message canvasMutationCallback = (p: canvasMutationParam) => void;
+
+ message canvasMutationParam {
+  id: number;
+  property: string;
+  args: Array<unknown>;
+  setter?: true;
+};
+
+ message fontParam {
+  family: string;
+  fontSource: string;
+  buffer: boolean;
+  descriptors?: FontFaceDescriptors;
+};
+
+ message fontCallback = (p: fontParam) => void;
+
+ message viewportResizeDimension {
+  width: number;
+  height: number;
+};
+
+ message viewportResizeCallback = (d: viewportResizeDimension) => void;
+
+ message inputValue {
+  text: string;
+  isChecked: boolean;
+};
+
+ message inputCallback = (v: inputValue & { id: number }) => void;
+
+ const enum MediaInteractions {
+  Play,
+  Pause,
+  Seeked,
+}
+
+ message mediaInteractionParam {
+  type: MediaInteractions;
+  id: number;
+  currentTime?: number;
+};
+
+ message mediaInteractionCallback = (p: mediaInteractionParam) => void;
+
+ message DocumentDimension {
+  x: number;
+  y: number;
+  // scale value relative to its parent iframe
+  relativeScale: number;
+  // scale value relative to the root iframe
+  absoluteScale: number;
+};
+
+ message Mirror {
+  map: idNodeMap;
+  getId: (n: INode) => number;
+  getNode: (id: number) => INode | null;
+  removeNodeFromMap: (n: INode) => void;
+  has: (id: number) => boolean;
+  reset: () => void;
+};
+
+ message throttleOptions {
+  leading?: boolean;
+  trailing?: boolean;
+};
+
+ message listenerHandler = () => void;
+ message hookResetter = () => void;
+
+ message ReplayPlugin {
+  handler: (
+    event: eventWithTime,
+    isSync: boolean,
+    context: { replayer: Replayer },
+  ) => void;
+};
+ message playerConfig {
+  speed: number;
+  maxSpeed: number;
+  root: Element;
+  loadTimeout: number;
+  skipInactive: boolean;
+  showWarning: boolean;
+  showDebug: boolean;
+  blockClass: string;
+  liveMode: boolean;
+  insertStyleRules: string[];
+  triggerFocus: boolean;
+  UNSAFE_replayCanvas: boolean;
+  pauseAnimation?: boolean;
+  mouseTail:
+    | boolean
+    | {
+        duration?: number;
+        lineCap?: string;
+        lineWidth?: number;
+        strokeStyle?: string;
+      };
+  unpackFn?: UnpackFn;
+  plugins?: ReplayPlugin[];
+};
+
+ message playerMetaData {
+  startTime: number;
+  endTime: number;
+  totalTime: number;
+};
+
+ message missingNode {
+  node: Node;
+  mutation: addedNodeMutation;
+};
+ message missingNodeMap {
+  [id: number]: missingNode;
+};
+
+ message actionWithDelay {
+  doAction: () => void;
+  delay: number;
+};
+
+ message Handler = (event?: unknown) => void;
+
+ message Emitter {
+  on(type: string, handler: Handler): void;
+  emit(type: string, event?: unknown): void;
+  off(type: string, handler: Handler): void;
+};
+
+ message Arguments<T> = T extends (...payload: infer U) => unknown
+  ? U
+  : unknown;
+
+ enum ReplayerEvents {
+  Start = 'start',
+  Pause = 'pause',
+  Resume = 'resume',
+  Resize = 'resize',
+  Finish = 'finish',
+  FullsnapshotRebuilded = 'fullsnapshot-rebuilded',
+  LoadStylesheetStart = 'load-stylesheet-start',
+  LoadStylesheetEnd = 'load-stylesheet-end',
+  SkipStart = 'skip-start',
+  SkipEnd = 'skip-end',
+  MouseInteraction = 'mouse-interaction',
+  EventCast = 'event-cast',
+  CustomEvent = 'custom-event',
+  Flush = 'flush',
+  StateChange = 'state-change',
+  PlayBack = 'play-back',
+}
+
+// store the state that would be changed during the process(unmount from dom and mount again)
+ message ElementState {
+  // [scrollLeft,scrollTop]
+  scroll?: [number, number];
+};
+
+ message KeepIframeSrcFn = (src: string) => boolean;
+message HeroById {
+  int32 id = 1;
+}
+
+message Hero {
+  int32 id = 1;
+  string name = 2;
+}
